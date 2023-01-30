@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handleliste</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div id="app"></div>
+    
+    <script>
+        //model
+        let list = [];
+        let html = '';
+        let editingItemId;
+
+        //view
+        view();
+        function view() { /*HTML*/ //<-- dersom du vil få innerhtml stringen til å se ut som HTML
+            html = `
+            <h1>Velkommen!</h1>
+            <h3>Lag handleliste...</h3>
+            <input id="itemInput" value=""> 
+            <button onclick=addItem()>Legg til vare!</button>
+            <br>
+            <br>
+            <table>
+                <tr>
+                    <th>Vare</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            `;
+
+            //Går gjennom alle elementene i handlelista
+            for (let i = 0; i < list.length; i++) {
+                if (editingItemId == i) { //Finner elementet som skal endres, dersom brukeren valgte det 
+                    html += `
+                    <tr>
+                        <td><input id="editInput" value="${list[i]}"></td>
+                        <td><button onclick="changeItem(${i})">Bekreft</button></td>
+                        <td></td>
+                    </tr>
+                    `;
+                }
+                else { //Tegner opp alle andre varer
+                    html += `
+                    <tr>
+                        <td>${list[i]}</td>
+                        <td><button onclick="editItem(${i})">Rediger</button></td>
+                        <td><button onclick="deleteItem(${i})">Slett</button></td>
+                    </tr>
+                    `;
+                }
+            }
+            
+
+            html += `
+            </table>
+            `;
+
+
+            document.getElementById("app").innerHTML = html;
+        }
+
+        //controller
+        function addItem() {
+            list.push(getInput('itemInput'));
+            view();
+        }
+
+        function deleteItem(id) {
+            list.splice(id, 1); //Sletter ett element, nemlig det brukeren valgte
+            view();
+        }
+
+        function editItem(id) {
+            editingItemId = id;
+            view();
+        }
+
+        function changeItem(id) {
+            list[id] = getInput('editInput');
+            editingItemId = null;
+            view();
+        }
+
+        function getInput(inputId) {
+            return document.getElementById(inputId).value;
+        }
+
+    </script>
+</body>    
+</html>
